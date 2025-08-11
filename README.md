@@ -31,27 +31,6 @@ A Streamlit web application that predicts student grades using a K-Nearest Neigh
    streamlit run app.py
    ```
 
-## Deployment to Streamlit Community Cloud
-
-### Prerequisites
-- GitHub account
-- Streamlit Community Cloud account
-
-### Steps
-1. **Push to GitHub**: Upload this cleaned project to a GitHub repository
-2. **Connect to Streamlit**: Go to [share.streamlit.io](https://share.streamlit.io)
-3. **Deploy**: Connect your GitHub repo and deploy
-4. **Configuration**: 
-   - Main file path: `app.py`
-   - Python version: 3.8+ (auto-detected)
-
-### What's Ready for Deployment
-✅ All unnecessary files removed  
-✅ Dependencies properly specified  
-✅ Main app functionality preserved  
-✅ Data files optimized  
-✅ Project structure clean  
-
 ## Model Details
 
 - **Algorithm**: K-Nearest Neighbors (KNN)
