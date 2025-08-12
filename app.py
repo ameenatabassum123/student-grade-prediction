@@ -28,7 +28,7 @@ else:
 st.title("Student Grade Prediction App (KNN)")
 
 st.header("Predict Student Grade")
-internal_marks_raw = st.number_input("Internal Marks (0–20)", 0.0, 40.0, step=0.5)
+internal_marks_raw = st.number_input("Internal Marks (0–40)", 0.0, 40.0, step=0.5)
 preboard_marks_raw = st.number_input("Preboard Marks (0–60)", 0.0, 60.0, step=0.5)
 
 if st.button("Predict Grade"):
