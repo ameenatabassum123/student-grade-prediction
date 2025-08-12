@@ -1,111 +1,67 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
+import joblib
+import os
 import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import train_test_split
+import seaborn as sns
 
-# ---------------------------
-# Load dataset
-# ---------------------------
-df = pd.read_csv("EDA_Formatted_Data.csv")  # Replace with your CSV file name
+# ===== Standardization parameters =====
+# Replace with the exact values used in preprocessing
+INTERNAL_MEAN = 10    # midpoint of 0–20
+INTERNAL_STD = 4      # adjust if your dataset used a different std
+PREBOARD_MEAN = 30    # midpoint of 0–60
+PREBOARD_STD = 10     # adjust if your dataset used a different std
 
-# Show dataset preview
-st.write("### Dataset Preview")
-st.dataframe(df.head())
-
-# Show all column names
-st.write("Dataset Columns:", df.columns.tolist())
-
-# Normalize column names for matching
-cols = {col.strip().lower(): col for col in df.columns}
-
-# Possible column name variations
-internal_raw = cols.get("internal marks")
-preboard_raw = cols.get("preboard marks")
-internal_std_col = cols.get("internal marks (standardized)")
-preboard_std_col = cols.get("preboard marks (standardized)")
-grade_col = cols.get("predicted grade") or cols.get("grade")
-
-if not grade_col:
-    st.error("Could not find 'Predicted Grade' or 'Grade' column in the dataset.")
-    st.stop()
-
-# ---------------------------
-# Determine if we have raw or standardized data
-# ---------------------------
-if internal_raw and preboard_raw:
-    st.write("Raw marks detected — standardizing now.")
-
-    internal_mean = df[internal_raw].mean()
-    internal_std = df[internal_raw].std()
-
-    preboard_mean = df[preboard_raw].mean()
-    preboard_std = df[preboard_raw].std()
-
-    df["Internal_Standardized"] = (df[internal_raw] - internal_mean) / internal_std
-    df["Preboard_Standardized"] = (df[preboard_raw] - preboard_mean) / preboard_std
-
-    X = df[["Internal_Standardized", "Preboard_Standardized"]]
+# ===== Load dataset =====
+csv_file = "EDA_Formatted_Data.csv"
+if os.path.exists(csv_file):
+    df = pd.read_csv(csv_file)
+    st.success("✅ Dataset loaded successfully!")
 else:
-    st.write("Standardized marks already in dataset — skipping standardization.")
+    st.error(f"❌ {csv_file} not found!")
 
-    if not internal_std_col or not preboard_std_col:
-        st.error("Dataset does not contain the required standardized columns.")
-        st.stop()
-
-    X = df[[internal_std_col, preboard_std_col]]
-
-# ---------------------------
-# Visualization
-# ---------------------------
-st.write("### Marks Distribution")
-fig, ax = plt.subplots(1, 2, figsize=(10, 4))
-
-if internal_raw and preboard_raw:
-    ax[0].hist(df[internal_raw], bins=10, color='skyblue', edgecolor='black')
-    ax[0].set_title("Internal Marks")
-    ax[1].hist(df[preboard_raw], bins=10, color='lightgreen', edgecolor='black')
-    ax[1].set_title("Preboard Marks")
+# ===== Load model =====
+model_file = "knn_model.pkl"
+if os.path.exists(model_file):
+    knn = joblib.load(model_file)
+    st.success("✅ Model loaded successfully!")
 else:
-    ax[0].hist(df[internal_std_col], bins=10, color='skyblue', edgecolor='black')
-    ax[0].set_title("Internal Marks (Standardized)")
-    ax[1].hist(df[preboard_std_col], bins=10, color='lightgreen', edgecolor='black')
-    ax[1].set_title("Preboard Marks (Standardized)")
+    st.error(f"❌ {model_file} not found!")
 
-st.pyplot(fig)
+st.title("Student Grade Prediction App (KNN)")
 
-# ---------------------------
-# Model Training
-# ---------------------------
-y = df[grade_col]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# ===== Prediction Section =====
+st.header("Predict Student Grade")
+internal_marks_raw = st.number_input("Internal Marks (0–20)", 0.0, 20.0, step=0.5)
+preboard_marks_raw = st.number_input("Preboard Marks (0–60)", 0.0, 60.0, step=0.5)
 
-model = KNeighborsClassifier(n_neighbors=3)
-model.fit(X_train, y_train)
-
-# ---------------------------
-# Prediction Section
-# ---------------------------
-st.write("## Predict Student Grade")
-
-if internal_raw and preboard_raw:
-    internal_raw_val = st.number_input("Internal Marks (0 - 20)", min_value=0.0, max_value=20.0, step=0.5)
-    preboard_raw_val = st.number_input("Preboard Marks (0 - 60)", min_value=0.0, max_value=60.0, step=0.5)
-
-    internal_std_val = (internal_raw_val - internal_mean) / internal_std
-    preboard_std_val = (preboard_raw_val - preboard_mean) / preboard_std
-
-    st.write(f"Standardized Internal Marks: {internal_std_val:.2f}")
-    st.write(f"Standardized Preboard Marks: {preboard_std_val:.2f}")
-
-    if st.button("Predict Grade"):
-        prediction = model.predict([[internal_std_val, preboard_std_val]])
+if st.button("Predict Grade"):
+    if 'knn' in locals():
+        # Convert real marks to standardized values for the model
+        internal_std = (internal_marks_raw - INTERNAL_MEAN) / INTERNAL_STD
+        preboard_std = (preboard_marks_raw - PREBOARD_MEAN) / PREBOARD_STD
+        
+        prediction = knn.predict([[internal_std, preboard_std]])
         st.success(f"Predicted Grade: {prediction[0]}")
-else:
-    internal_std_val = st.number_input("Internal Marks (Standardized)", step=0.1)
-    preboard_std_val = st.number_input("Preboard Marks (Standardized)", step=0.1)
 
-    if st.button("Predict Grade"):
-        prediction = model.predict([[internal_std_val, preboard_std_val]])
-        st.success(f"Predicted Grade: {prediction[0]}")
+# ===== Visualizations =====
+if 'df' in locals():
+    st.header("Data Visualizations")
+    
+    st.subheader("Grade Distribution")
+    st.bar_chart(df['Predicted Grade'].value_counts())
+    
+    st.subheader("Internal vs Preboard Marks")
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(
+        x='Internal Marks (Standardized)', 
+        y='Preboard Marks (Standardized)', 
+        hue='Predicted Grade', 
+        data=df, ax=ax1
+    )
+    st.pyplot(fig1)
+    
+    st.subheader("Correlation Heatmap")
+    fig2, ax2 = plt.subplots(figsize=(8, 6))
+    sns.heatmap(df.corr(numeric_only=True), annot=True, cmap='coolwarm', ax=ax2)
+    st.pyplot(fig2)
