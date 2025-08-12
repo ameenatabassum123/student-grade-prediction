@@ -53,13 +53,6 @@ I contributed to:
 - *Framework:* Streamlit
 - *Tools:* Jupyter Notebook, Git, GitHub
 
-## Screenshots
-<img width="1054" height="678" alt="image" src="https://github.com/user-attachments/assets/69dfc730-2eac-4e55-8f05-8997bc35d8ef" />
-<img width="1125" height="646" alt="image" src="https://github.com/user-attachments/assets/d6eb2e5a-294c-423a-8344-0d066d2fdc84" />
-<img width="1079" height="637" alt="image" src="https://github.com/user-attachments/assets/eac36c60-e81f-454a-bc70-9fbc9285d9fd" />
-<img width="1081" height="759" alt="image" src="https://github.com/user-attachments/assets/d6b480d7-92af-400a-81ef-1bcc4b94b22a" />
-
-
 ## Data
 
 The app uses a cleaned dataset with standardized marks for internal assessments and preboard examinations to predict final grades on a 0-10 scale.
