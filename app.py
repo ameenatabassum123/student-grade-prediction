@@ -5,7 +5,7 @@ import joblib
 # =========================
 # LOAD DATA & MODEL
 # =========================
-df = pd.read_csv("your_dataset.csv")  # Replace with your actual CSV file
+df = pd.read_csv("EDA_Formatted_Data.csv")  # Replace with your actual CSV file
 model = joblib.load("knn_model.pkl")  # Your trained model
 
 # Calculate mean & std from dataset
