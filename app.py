@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 # ---------------------------
 # Load dataset
 # ---------------------------
-df = pd.read_csv("your_dataset.csv")  # Replace with your CSV name
+df = pd.read_csv("EDA_Formatted_Data.csv")  # Replace with your CSV name
 
 # Show dataset preview
 st.write("### Dataset Preview")
