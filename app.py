@@ -5,7 +5,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-INTERNAL_MEAN = 10    # midpoint of 0–20
+INTERNAL_MEAN = 20    # midpoint of 0–40
 INTERNAL_STD = 4      # adjust if your dataset used a different std
 PREBOARD_MEAN = 30    # midpoint of 0–60
 PREBOARD_STD = 10     # adjust if your dataset used a different std
@@ -28,7 +28,7 @@ else:
 st.title("Student Grade Prediction App (KNN)")
 
 st.header("Predict Student Grade")
-internal_marks_raw = st.number_input("Internal Marks (0–20)", 0.0, 20.0, step=0.5)
+internal_marks_raw = st.number_input("Internal Marks (0–20)", 0.0, 40.0, step=0.5)
 preboard_marks_raw = st.number_input("Preboard Marks (0–60)", 0.0, 60.0, step=0.5)
 
 if st.button("Predict Grade"):
