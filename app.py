@@ -1,9 +1,6 @@
 import streamlit as st
-import pandas as pd
 import joblib
-import os
-import matplotlib.pyplot as plt
-import seaborn as sns
+
 model = joblib.load("knn_model.pkl")
 internal_mean = 12.0
 internal_std = 4.0
