@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 # ---------------------------
 # Load dataset
 # ---------------------------
-df = pd.read_csv("your_dataset.csv")  # Replace with your CSV file name
+df = pd.read_csv("EDA_Formatted_Data.csv")  # Replace with your CSV file name
 
 # Show dataset preview
 st.write("### Dataset Preview")
