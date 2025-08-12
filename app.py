@@ -9,7 +9,6 @@ import seaborn as sns
 csv_file = "EDA_Formatted_Data.csv"
 if os.path.exists(csv_file):
     df = pd.read_csv(csv_file)
-    st.success("✅ Dataset loaded successfully!")
 else:
     st.error(f"❌ {csv_file} not found!")
 
@@ -17,7 +16,6 @@ else:
 model_file = "knn_model.pkl"
 if os.path.exists(model_file):
     knn = joblib.load(model_file)
-    st.success("✅ Model loaded successfully!")
 else:
     st.error(f"❌ {model_file} not found!")
 
