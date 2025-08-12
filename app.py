@@ -22,7 +22,7 @@ if os.path.exists(model_file):
 else:
     st.error(f"❌ {model_file} not found!")
 
-st.title("Student Grade Prediction App (KNN)")
+st.title("Student Grade Prediction App")
 
 
 st.header("Predict Student Grade")
